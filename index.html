@@ -4,24 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="wrapper">
         <div class="outside-buttons">
-            <form>
-                <label for="player1">Player 1 (X) Name:</label>
-                <input type="text" name="player1" id="player1" required maxlength="30">
+                <div class="player1">
+                    <label for="player1">Player 1 (X) Name:</label>
+                    <input type="text" name="player1" id="player1" required maxlength="30">
+                </div>
 
-                <label for="player1">Player 2 (O) Name:</label>
-                <input type="text" name="player2" id="player2" required maxlength="30">
-                
-                <button type="submit">Start Game!</button>
-            </form>
+                <div class="player2">
+                    <label for="player1">Player 2 (O) Name:</label>
+                    <input type="text" name="player2" id="player2" required maxlength="30">
+                </div>
+
+                <button class="start-game" type="submit">Start Game!</button>
         </div>
         <div class="board">
-
+            
         </div>
     </div>
 </body>

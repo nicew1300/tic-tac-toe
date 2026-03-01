@@ -24,15 +24,21 @@ const gameBoard = (function() {
     return {getBoard, placeMarker, resetBoard}
 }()) // this is an IIFE that makes the gameboard object
 
-function createPlayer(name, marker) {
+function playerFactory(name, marker) {
     return {name, marker}
 }
 
 const gameController = (function() {
-    let player1 = createPlayer(screenController.player1Name, "X")
-    let player2 = createPlayer(screenController.player2Name, "O")
+    let player1;
+    let player2;
+    let activePlayer;
 
-    let activePlayer = player1
+    // called by screenController when names have been entered
+    function setPlayers(p1, p2) {
+        player1 = p1;
+        player2 = p2;
+        activePlayer = player1;      // start with player1
+    }
 
     const getActivePlayer = () => activePlayer
 
@@ -41,20 +47,20 @@ const gameController = (function() {
         activePlayer = activePlayer === player1 ? player2 : player1;
     }
 
-    function playRound() {
-        const legalMove = gameBoard.placeMarker(prompt("at what index do you wanna place your marker at?"), activePlayer.marker)
+    function playRound(index) {
+        const legalMove = gameBoard.placeMarker(index, getActivePlayer().marker)
 
         if (legalMove == true) {
             console.log(gameBoard.getBoard())
-            const isGameOver = checkWin(); // this captures the return value (winnerFound)
+            const isGameOver = checkWin(activePlayer) // this captures the return value (winnerFound)
     
             if (isGameOver == false) {
-                switchPlayer();
+                switchPlayer(player1, player2, activePlayer);
             }
         }
     }
 
-    function checkWin() {
+    function checkWin(activePlayer) {
         // reference list, better than writing 8 if statements i guess
         const winConditions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
@@ -93,19 +99,53 @@ const gameController = (function() {
         }
     }
 
-    return {getActivePlayer, switchPlayer, playRound, checkWin}
+    return {setPlayers, getActivePlayer, switchPlayer, playRound, checkWin}
 }()) // this is an IIFE that makes the gameController object
 
 const screenController = (function() {
-    const player1Name = document.querySelector("#player1").value
-    const player2Name = document.querySelector("#player2").value
 
-    const board = document.querySelector(".board")
-    for (let i = 0; i++; i <= 9) {
-        const boardButton = document.createElement(div)
-        boardButton.classList.add("board-button")
-        board.appendChild(boardButton)
+    const startGameButton = document.querySelector(".start-game")
+    startGameButton.addEventListener("click", () => {
+        getPlayerInput()
+        createBoard()
+    })
+    
+    function getPlayerInput() {
+        let player1Name = document.querySelector("#player1").value
+        let player2Name = document.querySelector("#player2").value
+
+        if (!player1Name || !player2Name) {
+            alert("Insert a name bro!")
+        }
+        else {
+            let player1 = playerFactory(player1Name, "X")
+            let player2 = playerFactory(player2Name, "O")
+            gameController.setPlayers(player1, player2)
+            createBoard()
+        }
     }
 
-    return {player1Name, player2Name}
+    function createBoard() {
+        const boardDiv = document.querySelector(".board");
+        boardDiv.textContent = "" // clears the board first
+
+        const currentBoard = gameBoard.getBoard()
+
+        for (let i = 0; i < currentBoard.length; i++) {
+            const boardButton = document.createElement("button")
+            boardButton.classList.add("cell")
+            
+            boardButton.textContent = currentBoard[i]
+
+            // link the click directly to the current index "i"
+            boardButton.addEventListener("click", () => {
+                gameController.playRound(i) // "i" is 0, 1, 2... 
+                createBoard() // refresh the board to show the new marker
+            });
+
+            boardDiv.appendChild(boardButton);
+        }
+    }
+
+    return {getPlayerInput, createBoard}
 }()) // this is an IIFE that makes the screenController object
