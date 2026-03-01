@@ -1,9 +1,9 @@
-const gameBoard = (function() {
-    let board =     ["", "", "",
-                    "", "", "",
-                    "", "", ""]
+const gameBoard = (function () {
+    let board = ["", "", "",
+        "", "", "",
+        "", "", ""]
 
-    const getBoard = () => board 
+    const getBoard = () => board
 
     function placeMarker(index, marker) {
         if (board[index] == "") {
@@ -18,17 +18,17 @@ const gameBoard = (function() {
 
     function resetBoard() {
         board = ["", "", "",
-                "", "", "",
-                "", "", ""]
+            "", "", "",
+            "", "", ""]
     }
-    return {getBoard, placeMarker, resetBoard}
+    return { getBoard, placeMarker, resetBoard }
 }()) // this is an IIFE that makes the gameboard object
 
 function playerFactory(name, marker) {
-    return {name, marker}
+    return { name, marker }
 }
 
-const gameController = (function() {
+const gameController = (function () {
     let player1;
     let player2;
     let activePlayer;
@@ -53,7 +53,6 @@ const gameController = (function() {
         if (legalMove == true) {
             console.log(gameBoard.getBoard())
             const isGameOver = checkWin(activePlayer) // this captures the return value (winnerFound)
-    
             if (isGameOver == false) {
                 switchPlayer(player1, player2, activePlayer);
             }
@@ -73,25 +72,25 @@ const gameController = (function() {
         // loop through the winning combinations and then check the real gameBoard array
         // [array[0]] basically takes the index of the array in winConditions above
         // and compares it to the index of the real gameBoard
-        
+
         winConditions.forEach(array => {
             if (gameBoard.getBoard()[array[0]] === activePlayer.marker &&
                 gameBoard.getBoard()[array[1]] === activePlayer.marker &&
                 gameBoard.getBoard()[array[2]] === activePlayer.marker) {
-                    winnerFound = true
+                winnerFound = true
             }
         })
 
         const isTie = !gameBoard.getBoard().includes("")
 
         if (winnerFound == true) {
-            console.log(`${activePlayer.name} is the winner! Resetting board...`)
-            gameBoard.resetBoard()
+            const winner = getActivePlayer()
+            const resultDiv = document.querySelector(".result")
+            resultDiv.textContent = `${winner.name} is the winner! Reset the board to play again!`
             return true
         }
         else if (isTie == true) {
-            console.log("It's a tie! Resetting board...")
-            gameBoard.resetBoard()
+            resultDiv.textContent = `It's a tie! Reset the board to play again!`
             return true // because the game is over
         }
         else {
@@ -99,17 +98,21 @@ const gameController = (function() {
         }
     }
 
-    return {setPlayers, getActivePlayer, switchPlayer, playRound, checkWin}
+    return { setPlayers, getActivePlayer, switchPlayer, playRound, checkWin }
 }()) // this is an IIFE that makes the gameController object
 
-const screenController = (function() {
+const screenController = (function () {
 
     const startGameButton = document.querySelector(".start-game")
     startGameButton.addEventListener("click", () => {
+        gameBoard.resetBoard()
         getPlayerInput()
         createBoard()
+        startGameButton.textContent = "Reset"
+        const resultDiv = document.querySelector(".result")
+        resultDiv.textContent = ""
     })
-    
+
     function getPlayerInput() {
         let player1Name = document.querySelector("#player1").value
         let player2Name = document.querySelector("#player2").value
@@ -122,6 +125,8 @@ const screenController = (function() {
             let player2 = playerFactory(player2Name, "O")
             gameController.setPlayers(player1, player2)
             createBoard()
+            player1Name.textContent = ""
+            player2Name.textContent = ""
         }
     }
 
@@ -134,18 +139,28 @@ const screenController = (function() {
         for (let i = 0; i < currentBoard.length; i++) {
             const boardButton = document.createElement("button")
             boardButton.classList.add("cell")
-            
+
             boardButton.textContent = currentBoard[i]
+
+            // add a marker‑specific class if there’s a marker in the cell
+            if (currentBoard[i] === "X") {
+                boardButton.classList.add("x-marker");
+            } else if (currentBoard[i] === "O") {
+                boardButton.classList.add("o-marker");
+            }
 
             // link the click directly to the current index "i"
             boardButton.addEventListener("click", () => {
-                gameController.playRound(i) // "i" is 0, 1, 2... 
-                createBoard() // refresh the board to show the new marker
-            });
+                // can only place a marker if the game is still running (aka checkWin returns false)
+                if (gameController.checkWin(gameController.getActivePlayer()) == false) {
+                    gameController.playRound(i) // "i" is 0, 1, 2...
+                    createBoard() // refresh the board to show the new marker
+                }
+            })
 
             boardDiv.appendChild(boardButton);
         }
     }
 
-    return {getPlayerInput, createBoard}
+    return { getPlayerInput, createBoard }
 }()) // this is an IIFE that makes the screenController object
