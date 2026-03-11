@@ -1,16 +1,3 @@
 # tic-tac-toe
-This is the second JavaScript Fullstack project in The Odin Project, after learning factory functions.
-
-It was a pretty hard project, especially handling IIFE's and factory functions
-perfectly with complex states right after reading about them. It caught
-me off guard.
-But I easily managed to complete this project only in one day!
-The most difficult part of this project was keeping track
-of closures and scopes, where some are accessible and where not, and
-trying to figure out why the hell does the most random thing throw an
-error after changing only one line a bit in a whole different part of the code that has absolutely nothing to do with the error...
-The second hardest part was figuring out how to assign the specific
-cell that got clicked to the gameBoard array index, but yeah, 
-I had to figure that out with a little bit of help from ChatGPT.
-
-Anyways, pretty cool project though!
+This is a classic Tic-Tac-Toe game I made with JavaScript, using factory functions and IIFEs for encapsulation and state management. The game keeps track of turns and win conditions using arrays. The hardest parts were handling closures and scopes, and figuring out how to link a clicked board cell to the correct index in the game state. It was challenging at first, but I managed to get it done in one day and learned a lot about functional programming patterns in JS.
+In this project, the newly used technologies were factory functions, IIFEs, and array-based game state management.
