@@ -1,3 +1,17 @@
 # tic-tac-toe
-This is a classic Tic-Tac-Toe game I made with JavaScript, using factory functions and IIFEs for encapsulation and state management. The game keeps track of turns and win conditions using arrays. The hardest parts were handling closures and scopes, and figuring out how to link a clicked board cell to the correct index in the game state. It was challenging at first, but I managed to get it done in one day and learned a lot about functional programming patterns in JS.
-In this project, the newly used technologies were factory functions, IIFEs, and array-based game state management.
+Description:
+Classic Tic-Tac-Toe game implemented with JavaScript, focusing on factory functions and IIFE (Immediately Invoked Function Expressions) for encapsulation and state management.
+
+Key Features:
+
+Two-player gameplay with interactive board.
+
+Game state stored in arrays, managing turns and win conditions.
+
+Challenges & Learnings:
+
+Managing closures and scoping in JavaScript.
+
+Linking clicked board cells to the game state array.
+
+Strengthened understanding of functional programming patterns in JS.
